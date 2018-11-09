@@ -1,0 +1,37 @@
+{
+  "name": "skryabin_recruit",
+  "version": "1.0.0",
+  "description": "recruit rest api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "engines": {
+    "node": ">=6.11.1",
+    "npm": ">=3.10.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vskryabin/recruit-rest-api.git"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "Recruit"
+  ],
+  "author": "Slava Skryabin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vskryabin/recruit-rest-api/issues"
+  },
+  "homepage": "https://github.com/vskryabin/recruit-rest-api#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
+  }
+}
