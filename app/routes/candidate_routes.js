@@ -118,6 +118,39 @@
  *         description: Wrong candidate id provided
  *       500:
  *         description: Application error
+ *   patch:
+ *     tags: 
+ *       - candidates
+ *     description: Updates a single candidate
+ *     produces: application/json
+ *     parameters:
+ *       - name: name
+ *         description: name of the candidate
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: address
+ *         description: address of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: summary
+ *         description: summary of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *     responses:
+ *       200:
+ *         description: Successfully updated
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       400:
+ *         description: Wrong candidate id provided
+ *       500:
+ *         description: Application error
  *   delete:
  *     tags:
  *       - candidates
@@ -131,7 +164,7 @@
  *         required: true
  *         type: integer
  *     responses:
- *       200:
+ *       204:
  *         description: Successfully deleted
  *       400:
  *         description: Wrong candidate id provided
@@ -211,6 +244,25 @@
  *         description: Bad request
  *       500:
  *         description: Application error
+ *   delete:
+ *     tags:
+ *       - resumes
+ *     description: Deletes a resume
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: candidate's id
+ *         in: path
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       204:
+ *         description: Successfully deleted resume
+ *       400:
+ *         description: Wrong candidate id provided
+ *       500:
+ *         description: Application error
  * /candidates/{candidateId}/positions/{positionId}:
  *   get:
  *     tags:
@@ -278,6 +330,21 @@ module.exports = function(app, db) {
         })
     })
     .put((req, res) => {
+        let id = Number(req.params.candidateId);
+        let candidate = req.body;
+        let sql = `UPDATE candidates SET ? WHERE id = ${id}`;
+        let query = db.query(sql, candidate, (err, result) => {
+            if (err) {
+                res.status(500).json(err);
+            } else if (result === undefined || result.length == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect candidateId: ' + id });
+            } else {
+                candidate['id'] = Number(id);
+                res.status(200).json(candidate);
+            }
+        })
+    })
+    .patch((req, res) => {
         let id = Number(req.params.candidateId);
         let candidate = req.body;
         let sql = `UPDATE candidates SET ? WHERE id = ${id}`;
@@ -376,6 +443,21 @@ module.exports = function(app, db) {
                 }
             })
         }
+    })
+    .delete((req, res) => {
+        let candidateId = Number(req.params.candidateId);
+        let sql = `UPDATE candidates SET resume = NULL WHERE id = ${candidateId}`;
+        let query = db.query(sql, (err, result) => {
+            if (err) {
+                res.status(500).json(err);
+            } else if (result === undefined || result.length == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect candidateId: ' + candidateId });
+            } else if (result.affectedRows == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect candidateId: ' + candidateId });
+            } else {
+                res.status(204).json();
+            }
+        })
     });
   app.route('/recruit/api/v1/candidates/:candidateId/positions/:positionId')
     .get((req, res) => {

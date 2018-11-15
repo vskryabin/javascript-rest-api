@@ -108,6 +108,33 @@
  *         description: Wrong application id provided
  *       500:
  *         description: Application error
+ *   patch:
+ *     tags: 
+ *       - applications
+ *     description: Updates a single application
+ *     produces: application/json
+ *     parameters:
+ *       - name: candidateId
+ *         description: primary key of candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: positionId
+ *         description: primary key of position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *     responses:
+ *       200:
+ *         description: Successfully updated
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       400:
+ *         description: Wrong application id provided
+ *       500:
+ *         description: Application error
  *   delete:
  *     tags:
  *       - applications
@@ -121,7 +148,7 @@
  *         required: true
  *         type: integer
  *     responses:
- *       200:
+ *       204:
  *         description: Successfully deleted
  *       400:
  *         description: Wrong application id provided
@@ -163,6 +190,25 @@
  *           $ref: '#/definitions/resumes'
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Application error
+ *   delete:
+ *     tags:
+ *       - resumes
+ *     description: Deletes a resume
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: application's id
+ *         in: path
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       204:
+ *         description: Successfully deleted resume
+ *       400:
+ *         description: Wrong application id provided
  *       500:
  *         description: Application error
  */
@@ -216,6 +262,21 @@ module.exports = function(app, db) {
         })
     })
     .put((req, res) => {
+        let id = Number(req.params.applicationId);
+        let application = req.body;
+        let sql = `UPDATE applications SET ? WHERE id = ${id}`;
+        let query = db.query(sql, application, (err, result) => {
+            if (err) {
+                res.status(500).json(err);
+            } else if (result === undefined || result.length == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect applicationId: ' + id });
+            } else {
+                application['id'] = Number(req.params.applicationId);
+                res.status(200).json(application);
+            }
+        })
+    })
+    .patch((req, res) => {
         let id = Number(req.params.applicationId);
         let application = req.body;
         let sql = `UPDATE applications SET ? WHERE id = ${id}`;
@@ -285,5 +346,20 @@ module.exports = function(app, db) {
                 }
             })
         }
+    })
+    .delete((req, res) => {
+        let id = Number(req.params.applicationId);
+        let sql = `UPDATE candidates SET resume = NULL WHERE candidates.id = (SELECT candidateId from applications WHERE applications.id = ${id});`;
+        let query = db.query(sql, (err, result) => {
+            if (err) {
+                res.status(500).json(err);
+            } else if (result === undefined || result.length == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect applicationId: ' + id });
+            } else if (result.affectedRows == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect applicationId: ' + id });
+            } else {
+                res.status(204).json();
+            }
+        })
     });
 };

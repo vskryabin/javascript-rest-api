@@ -114,6 +114,39 @@
  *         description: Wrong position id provided
  *       500:
  *         description: Application error
+ *   patch:
+ *     tags: 
+ *       - positions
+ *     description: Updates a single position
+ *     produces: application/json
+ *     parameters:
+ *       - name: title
+ *         description: title of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: address
+ *         description: address of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: description
+ *         description: description of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *     responses:
+ *       200:
+ *         description: Successfully updated
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       400:
+ *         description: Wrong position id provided
+ *       500:
+ *         description: Application error
  *   delete:
  *     tags:
  *       - positions
@@ -127,7 +160,7 @@
  *         required: true
  *         type: integer
  *     responses:
- *       200:
+ *       204:
  *         description: Successfully deleted
  *       400:
  *         description: Wrong position id provided
@@ -260,6 +293,21 @@ module.exports = function(app, db) {
             }
     	})
 	})
+    .patch((req, res) => {
+        let id = Number(req.params.positionId);
+        let position = req.body;
+        let sql = `UPDATE positions SET ? WHERE id = ${id}`;
+        let query = db.query(sql, position, (err, result) => {
+            if (err) {
+                res.status(500).json(err);
+            } else if (result === undefined || result.length == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect positionId: ' + id });
+            } else {
+                position['id'] = Number(id);
+                res.status(200).json(position);
+            }
+        })
+    })
     .delete((req, res) => {
     	let id = Number(req.params.positionId);
     	let sql = `DELETE FROM positions WHERE id = ${id}`;
