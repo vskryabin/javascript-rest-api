@@ -25,6 +25,6 @@ module.exports = function(app, db) {
 
   app.get('/recruit/api/v1/swagger.json', function(req, res) {  
     res.setHeader('Content-Type', 'application/json');   
-    res.send(swaggerSpec); 
+    res.send(JSON.stringify(swaggerSpec, null, 2)); 
   });
 };
