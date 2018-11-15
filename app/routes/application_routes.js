@@ -14,7 +14,8 @@
  *       title:
  *         type: string
  *       date:
- *         type: date
+ *         type: string
+ *         format: date
  *       summary:
  *         type: string
  *       description:
