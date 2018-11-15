@@ -14,7 +14,8 @@
  *   resumes:
  *     properties:
  *       resume:
- *         type: file
+ *         type: string
+ *         format: binary
  * /candidates:
  *   get:
  *     tags:
