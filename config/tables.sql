@@ -6,10 +6,11 @@ CREATE TABLE candidates (
     id int NOT NULL AUTO_INCREMENT,
     name varchar(255) NOT NULL,
     address varchar(255),
-    resume varchar(255),
+    summary varchar(255),
+    resume MEDIUMBLOB,
     PRIMARY KEY (id)
 );
-INSERT INTO candidates (name, address, resume)
+INSERT INTO candidates (name, address, summary)
 VALUES 
 ('John Doe', '4970 El Camino Real, Los Altos, CA 94022', 'Director, Product Development, 15 years of experience'),
 ('Maria  Becker', '3944 Millbrook Road, Naperville, IL 60540', 'Principal Automation Engineer, 8 years of experience'),
@@ -51,8 +52,8 @@ VALUES
 ('5', '3', '2018-09-18'),
 ('5', '4', '2018-09-24');
 
-SELECT name, address from candidates;
+SELECT * from candidates;
 
-SELECT title, address from positions;
+SELECT * from positions;
 
-SELECT name, title, date FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id;
+SELECT applications.id, candidateId, positionId, name, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id;
