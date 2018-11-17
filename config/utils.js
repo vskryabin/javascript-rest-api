@@ -9,3 +9,12 @@ exports.todaysDate = function() {
     if (day.length < 2) day = '0' + day;
     return [year, month, day].join('-');
 }
+
+exports.isEmpty = function(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return JSON.stringify(obj) === JSON.stringify({});
+}

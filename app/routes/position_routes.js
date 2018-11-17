@@ -227,7 +227,19 @@ var utils = require('../../config/utils');
 module.exports = function(app, db) {
   app.route('/recruit/api/v1/positions')
     .get((req, res) => {
-    	let sql = 'SELECT * FROM positions';
+    	let sql = "SELECT * FROM positions";
+        if (!utils.isEmpty(req.query)) {
+            let where = " WHERE ";
+            let count = 1;
+            for(var param in req.query) {
+                if (count > 1) {
+                    where = where + " AND ";
+                }
+                where = where + param + " LIKE '%" + req.query[param] + "%'";
+                count++;
+            }
+            sql = sql + where;
+        }
     	let query = db.query(sql, (err, result) => {
     		if (err) {
                 res.status(500).json(err);
