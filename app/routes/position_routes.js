@@ -18,6 +18,31 @@
  *     description: Returns all positions
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: title
+ *         description: title of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: address
+ *         description: address of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: description
+ *         description: description of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *     responses:
  *       200:
  *         description: An array of positions
@@ -72,6 +97,13 @@
  *     description: Returns a single position
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *     responses:
  *       200:
  *         description: A single position
@@ -87,6 +119,12 @@
  *     description: Updates a single position
  *     produces: application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: title
  *         description: title of the position
  *         in: body
@@ -120,6 +158,12 @@
  *     description: Updates a single position
  *     produces: application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: title
  *         description: title of the position
  *         in: body
@@ -155,10 +199,11 @@
  *       - application/json
  *     parameters:
  *       - name: id
- *         description: position's id
+ *         description: primary key of position
  *         in: path
  *         required: true
- *         type: integer
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *     responses:
  *       204:
  *         description: Successfully deleted
@@ -173,6 +218,13 @@
  *     description: Returns candidates applied for a position
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *     responses:
  *       200:
  *         description: An array of candidates
@@ -189,6 +241,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: candidateId
  *         description: primary key of candidate
  *         in: body
@@ -209,6 +267,19 @@
  *     description: Returns a single candidate
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: positionId
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: candidateId
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       200:
  *         description: A single candidate
