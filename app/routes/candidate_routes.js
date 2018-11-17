@@ -33,7 +33,7 @@
  *       - name: name
  *         description: name of the candidate
  *         in: query
- *         required: true
+ *         required: false
  *         schema:
  *           $ref: '#/definitions/candidates'
  *       - name: address
