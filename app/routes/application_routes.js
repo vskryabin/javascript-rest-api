@@ -31,6 +31,61 @@
  *     description: Returns all applications
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: candidateId
+ *         description: primary key of candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: positionId
+ *         description: primary key of position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: name
+ *         description: name of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: summary
+ *         description: summary of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: candidate_address
+ *         description: address of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: title
+ *         description: title of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: description
+ *         description: description of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: position_address
+ *         description: address of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *     responses:
  *       200:
  *         description: An array of applications
@@ -47,6 +102,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *       - name: candidateId
  *         description: primary key of candidate
  *         in: body
@@ -73,6 +134,13 @@
  *     description: Returns a single application
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *     responses:
  *       200:
  *         description: A single application
@@ -88,6 +156,12 @@
  *     description: Updates a single application
  *     produces: application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *       - name: candidateId
  *         description: primary key of candidate
  *         in: body
@@ -115,6 +189,12 @@
  *     description: Updates a single application
  *     produces: application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *       - name: candidateId
  *         description: primary key of candidate
  *         in: body
@@ -144,10 +224,11 @@
  *       - application/json
  *     parameters:
  *       - name: id
- *         description: application's id
+ *         description: primary key of application
  *         in: path
  *         required: true
- *         type: integer
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *     responses:
  *       204:
  *         description: Successfully deleted
@@ -162,6 +243,13 @@
  *     description: Returns resume of the candidate
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *     responses:
  *       200:
  *         description: Resume of the candidate
@@ -178,6 +266,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of application
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *       - name: resume
  *         description: requires header Content-Type multipart/form-data and resume file in the body. 1 Mb size limit.
  *         in: body
@@ -201,10 +295,11 @@
  *       - application/json
  *     parameters:
  *       - name: id
- *         description: application's id
+ *         description: primary key of application
  *         in: path
  *         required: true
- *         type: integer
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *     responses:
  *       204:
  *         description: Successfully deleted resume
@@ -229,6 +324,13 @@ module.exports = function(app, db) {
             let where = " WHERE ";
             let count = 1;
             for(var param in req.query) {
+                if (param == "candidate_address") {
+                    param = "candidates.address";
+                } else if (param == "position_address") {
+                    param = "positions.address";
+                } else if (param == "id") {
+                    param = "applications.id";
+                }
                 if (count > 1) {
                     where = where + " AND ";
                 }

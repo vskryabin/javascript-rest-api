@@ -23,6 +23,31 @@
  *     description: Returns all candidates
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: name
+ *         description: name of the candidate
+ *         in: query
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: address
+ *         description: address of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: summary
+ *         description: summary of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       200:
  *         description: An array of candidates
@@ -77,6 +102,13 @@
  *     description: Returns a single candidate
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       200:
  *         description: A single candidate
@@ -92,6 +124,12 @@
  *     description: Updates a single candidate
  *     produces: application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *       - name: name
  *         description: name of the candidate
  *         in: body
@@ -125,6 +163,12 @@
  *     description: Updates a single candidate
  *     produces: application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *       - name: name
  *         description: name of the candidate
  *         in: body
@@ -160,10 +204,11 @@
  *       - application/json
  *     parameters:
  *       - name: id
- *         description: candidate's id
+ *         description: primary key of candidate
  *         in: path
  *         required: true
- *         type: integer
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       204:
  *         description: Successfully deleted
@@ -178,6 +223,12 @@
  *     description: Returns positions candidate applied to
  *     produces:
  *       - application/json
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       200:
  *         description: An array of positions
@@ -194,6 +245,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *       - name: positionId
  *         description: primary key of position
  *         in: body
@@ -214,6 +271,13 @@
  *     description: Returns resume of the candidate
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       200:
  *         description: Resume of the candidate
@@ -230,6 +294,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: id
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *       - name: resume
  *         description: requires header Content-Type multipart/form-data and resume file in the body. 1 Mb size limit.
  *         in: body
@@ -253,10 +323,11 @@
  *       - application/json
  *     parameters:
  *       - name: id
- *         description: candidate's id
+ *         description: primary key of candidate
  *         in: path
  *         required: true
- *         type: integer
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *     responses:
  *       204:
  *         description: Successfully deleted resume
@@ -271,6 +342,19 @@
  *     description: Returns a single position
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: candidateId
+ *         description: primary key of candidate
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: positionId
+ *         description: primary key of position
+ *         in: path
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *     responses:
  *       200:
  *         description: A single position
