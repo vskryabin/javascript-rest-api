@@ -224,7 +224,19 @@ var upload = multer({storage: storage});
 module.exports = function(app, db) {
   app.route('/recruit/api/v1/applications')
     .get((req, res) => {
-        let sql = 'SELECT applications.id, candidateId, positionId, name, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id;';
+        let sql = "SELECT applications.id, candidateId, positionId, name, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id";
+        if (!utils.isEmpty(req.query)) {
+            let where = " WHERE ";
+            let count = 1;
+            for(var param in req.query) {
+                if (count > 1) {
+                    where = where + " AND ";
+                }
+                where = where + param + " LIKE '%" + req.query[param] + "%'";
+                count++;
+            }
+            sql = sql + where;
+        }
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
