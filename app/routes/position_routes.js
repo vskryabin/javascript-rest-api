@@ -293,159 +293,23 @@
 
 'use strict';
 
-var utils = require('../../config/utils');
-
 module.exports = function(app, db) {
+  var positions = require('../controllers/position_controller');
+
   app.route('/recruit/api/v1/positions')
-    .get((req, res) => {
-    	let sql = "SELECT * FROM positions";
-        if (!utils.isEmpty(req.query)) {
-            let where = " WHERE ";
-            let count = 1;
-            for(var param in req.query) {
-                if (count > 1) {
-                    where = where + " AND ";
-                }
-                where = where + param + " LIKE '%" + req.query[param] + "%'";
-                count++;
-            }
-            sql = sql + where;
-        }
-    	let query = db.query(sql, (err, result) => {
-    		if (err) {
-                res.status(500).json(err);
-    		} else if (result === undefined || result.length == 0) {
-                res.status(204).json(result);
-            } else {
-    		    res.status(200).json(result);
-    		}
-    	})
-	})
-    .post((req, res) => {
-    	// let position = {title:'Director, Product Development', address:'4135 Thunder Road, Palo Alto, CA 94306', description:'Director, Product Development requirements'}
-   		let position = req.body;
-   		let sql = 'INSERT INTO positions SET ?';
-    	let query = db.query(sql, position, (err, result) => {
-    		if (err) {
-                res.status(500).json(err);
-    		} else {
-    		    position['id'] = result.insertId;
-    		    res.status(201).json(position);
-    		}
-    	})
-	});
- //    .delete((req, res) => {
- //    	let sql = 'DELETE FROM positions';
- //    	let query = db.query(sql, (err, result) => {
- //    		if (err) {
- //             res.status(500).json(err);
- //    		} else if (result.affectedRows == 0) {
- //                res.status(400).json();
- //            } else {
- //    		   res.status(204).json();
- //            }
- //    	})
-	// });
+    .get(positions.search(db))
+    .post(positions.create(db));
 
   app.route('/recruit/api/v1/positions/:positionId')
-    .get((req, res) => {
-    	let id = Number(req.params.positionId);
-    	let sql = `SELECT * FROM positions WHERE id = ${id}`;
-    	let query = db.query(sql, (err, result) => {
-    		if (err) {
-                res.status(500).json(err);
-    		} else if (result === undefined || result.length == 0) {
-                res.status(400).json({ errorMessage: 'Incorrect positionId: ' + id });
-            } else {
-    		    res.status(200).json(result[0]);
-            }
-    	})
-	})
-    .put((req, res) => {
-        let id = Number(req.params.positionId);
-   		let position = req.body;
-   		let sql = `UPDATE positions SET ? WHERE id = ${id}`;
-    	let query = db.query(sql, position, (err, result) => {
-    		if (err) {
-                res.status(500).json(err);
-    		} else if (result === undefined || result.length == 0) {
-                res.status(400).json({ errorMessage: 'Incorrect positionId: ' + id });
-            } else {
-                position['id'] = Number(id);
-    		    res.status(200).json(position);
-            }
-    	})
-	})
-    .patch((req, res) => {
-        let id = Number(req.params.positionId);
-        let position = req.body;
-        let sql = `UPDATE positions SET ? WHERE id = ${id}`;
-        let query = db.query(sql, position, (err, result) => {
-            if (err) {
-                res.status(500).json(err);
-            } else if (result === undefined || result.length == 0) {
-                res.status(400).json({ errorMessage: 'Incorrect positionId: ' + id });
-            } else {
-                position['id'] = Number(id);
-                res.status(200).json(position);
-            }
-        })
-    })
-    .delete((req, res) => {
-    	let id = Number(req.params.positionId);
-    	let sql = `DELETE FROM positions WHERE id = ${id}`;
-    	let query = db.query(sql, id, (err, result) => {
-    		if (err) {
-                res.status(500).json(err);
-    		} else if (result === undefined || result.length == 0) {
-                res.status(400).json({ errorMessage: 'Incorrect positionId: ' + id });
-            } else if (result.affectedRows == 0) {
-                res.status(400).json({ errorMessage: 'Incorrect positionId: ' + id });
-            } else {
-                console.log(result);
-    		    res.status(204).json({ message: 'Position ' + id + ' successfully deleted!' });
-            }
-    	})
-	});
+    .get(positions.get_by_id(db))
+    .put(positions.update_by_id(db))
+    .patch(positions.update_by_id(db))
+    .delete(positions.delete_by_id(db));
+
   app.route('/recruit/api/v1/positions/:positionId/candidates')
-    .get((req, res) => {
-        let positionId = Number(req.params.positionId);
-        let sql = `SELECT candidates.id, candidates.name, candidates.address, candidates.summary FROM candidates INNER JOIN applications ON applications.candidateId = candidates.id WHERE applications.positionId = ${positionId};`;
-        let query = db.query(sql, (err, result) => {
-            if (err) {
-                res.status(500).json(err);
-            } else if (result === undefined || result.length == 0) {
-                res.status(204).json(result);
-            } else {
-                res.status(200).json(result);
-            }
-        })
-    })
-    .post((req, res) => {
-        let application = req.body;
-        application['positionId'] = Number(req.params.positionId);
-        application['date'] = utils.todaysDate();
-        let sql = 'INSERT INTO applications SET ?';
-        let query = db.query(sql, application, (err, result) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-            }
-        })
-    });
+    .get(positions.get_candidates_by_position_id(db))
+    .post(positions.create_candidate_by_position_id(db));
+
   app.route('/recruit/api/v1/positions/:positionId/candidates/:candidateId')
-    .get((req, res) => {
-        let positionId = Number(req.params.positionId);
-        let candidateId = Number(req.params.candidateId);
-        let sql = `SELECT candidates.id, candidates.name, candidates.address, candidates.summary FROM candidates INNER JOIN applications ON applications.candidateId = candidates.id WHERE applications.positionId = ${positionId} AND applications.candidateId = ${candidateId};`;
-        let query = db.query(sql, (err, result) => {
-            if (err) {
-                res.status(500).json(err);
-            } else if (result === undefined || result.length == 0) {
-                res.status(400).json({ errorMessage: 'Incorrect combination of positionId: ' + positionId + ' and candidateId: ' + candidateId });
-            } else {
-                res.status(200).json(result[0]);
-            }
-        })
-    });
+    .get(positions.get_candidate_by_position_id_and_candidate_id(db));
 };
