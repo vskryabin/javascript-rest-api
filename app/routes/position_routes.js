@@ -293,22 +293,24 @@
 
 'use strict';
 
+var verifyToken = require('../../config/verify_token');
+
 module.exports = function(app, db) {
   var positions = require('../controllers/position_controller');
 
   app.route('/recruit/api/v1/positions')
     .get(positions.search(db))
-    .post(positions.create(db));
+    .post(verifyToken, positions.create(db));
 
   app.route('/recruit/api/v1/positions/:positionId')
     .get(positions.get_by_id(db))
-    .put(positions.update_by_id(db))
-    .patch(positions.update_by_id(db))
-    .delete(positions.delete_by_id(db));
+    .put(verifyToken, positions.update_by_id(db))
+    .patch(verifyToken, positions.update_by_id(db))
+    .delete(verifyToken, positions.delete_by_id(db));
 
   app.route('/recruit/api/v1/positions/:positionId/candidates')
     .get(positions.get_candidates_by_position_id(db))
-    .post(positions.create_candidate_by_position_id(db));
+    .post(verifyToken, positions.create_candidate_by_position_id(db));
 
   app.route('/recruit/api/v1/positions/:positionId/candidates/:candidateId')
     .get(positions.get_candidate_by_position_id_and_candidate_id(db));

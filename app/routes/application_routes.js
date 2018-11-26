@@ -314,23 +314,24 @@
 var multer = require('multer');
 var storage = multer.memoryStorage()
 var upload = multer({storage: storage});
+var verifyToken = require('../../config/verify_token');
 
 module.exports = function(app, db) {
   var applications = require('../controllers/application_controller');
 
   app.route('/recruit/api/v1/applications')
     .get(applications.search(db))
-    .post(applications.create(db));
+    .post(verifyToken, applications.create(db));
     // .delete(applications.delete(db));
 
   app.route('/recruit/api/v1/applications/:applicationId')
     .get(applications.get_by_id(db))
-    .put(applications.update_by_id(db))
-    .patch(applications.update_by_id(db))
-    .delete(applications.delete_by_id(db));
+    .put(verifyToken, applications.update_by_id(db))
+    .patch(verifyToken, applications.update_by_id(db))
+    .delete(verifyToken, applications.delete_by_id(db));
 
  app.route('/recruit/api/v1/applications/:applicationId/resume')
     .get(applications.get_resume_by_application_id(db))
-    .post(upload.single("resume"), applications.create_resume_by_application_id(db))
-    .delete(applications.delete_resume_by_application_id(db));
+    .post(verifyToken, upload.single("resume"), applications.create_resume_by_application_id(db))
+    .delete(verifyToken, applications.delete_resume_by_application_id(db));
 };

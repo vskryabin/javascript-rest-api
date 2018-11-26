@@ -3,7 +3,7 @@
 var utils = require('../../config/utils');
 
 exports.search = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
     	let sql = "SELECT * FROM positions";
         if (!utils.isEmpty(req.query)) {
             let where = " WHERE ";
@@ -30,7 +30,7 @@ exports.search = function(db) {
 };
 
 exports.create = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
     	// let position = {title:'Director, Product Development', address:'4135 Thunder Road, Palo Alto, CA 94306', description:'Director, Product Development requirements'}
    		let position = req.body;
    		let sql = 'INSERT INTO positions SET ?';
@@ -46,7 +46,7 @@ exports.create = function(db) {
 };
 
 exports.get_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
     	let id = Number(req.params.positionId);
     	let sql = `SELECT * FROM positions WHERE id = ${id}`;
     	let query = db.query(sql, (err, result) => {
@@ -62,7 +62,7 @@ exports.get_by_id = function(db) {
 };
 
 exports.update_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.positionId);
    		let position = req.body;
    		let sql = `UPDATE positions SET ? WHERE id = ${id}`;
@@ -80,7 +80,7 @@ exports.update_by_id = function(db) {
 };
 
 exports.delete_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
     	let id = Number(req.params.positionId);
     	let sql = `DELETE FROM positions WHERE id = ${id}`;
     	let query = db.query(sql, id, (err, result) => {
@@ -100,7 +100,7 @@ exports.delete_by_id = function(db) {
 
 
 exports.get_candidates_by_position_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let positionId = Number(req.params.positionId);
         let sql = `SELECT candidates.id, candidates.name, candidates.address, candidates.summary FROM candidates INNER JOIN applications ON applications.candidateId = candidates.id WHERE applications.positionId = ${positionId};`;
         let query = db.query(sql, (err, result) => {
@@ -116,7 +116,7 @@ exports.get_candidates_by_position_id = function(db) {
 };
 
 exports.create_candidate_by_position_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let application = req.body;
         application['positionId'] = Number(req.params.positionId);
         application['date'] = utils.todaysDate();
@@ -131,10 +131,10 @@ exports.create_candidate_by_position_id = function(db) {
 };
 
 exports.get_candidate_by_position_id_and_candidate_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let positionId = Number(req.params.positionId);
         let candidateId = Number(req.params.candidateId);
-        let sql = `SELECT candidates.id, candidates.name, candidates.address, candidates.summary FROM candidates INNER JOIN applications ON applications.candidateId = candidates.id WHERE applications.positionId = ${positionId} AND applications.candidateId = ${candidateId};`;
+        let sql = `SELECT candidates.id, candidates.name, candidates.email, candidates.address, candidates.summary FROM candidates INNER JOIN applications ON applications.candidateId = candidates.id WHERE applications.positionId = ${positionId} AND applications.candidateId = ${candidateId};`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);

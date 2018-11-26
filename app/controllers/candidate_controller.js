@@ -1,10 +1,14 @@
 'use strict';
 
 var utils = require('../../config/utils');
+var config = require('../../config/config');
+
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 
 exports.search = function(db) {
-    return function(req, res) {
-        let sql = "SELECT id, name, address, summary FROM candidates";
+    return function(req, res, next) {
+        let sql = "SELECT id, name, email, address, summary FROM candidates";
         if (!utils.isEmpty(req.query)) {
             let where = " WHERE ";
             let count = 1;
@@ -31,24 +35,31 @@ exports.search = function(db) {
 };
 
 exports.create = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let candidate = req.body;
-        let sql = 'INSERT INTO candidates SET ?';
-        let query = db.query(sql, candidate, (err, result) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-                candidate['id'] = result.insertId;
-                res.status(201).json(candidate);
-            }
-        })
+        if (candidate['password'] && candidate['password'].trim()) {
+            var hashedPassword = bcrypt.hashSync(candidate['password'].trim(), 8);
+            candidate['password'] = hashedPassword;
+            let sql = 'INSERT INTO candidates SET ?';
+            let query = db.query(sql, candidate, (err, result) => {
+                if (err) {
+                    res.status(500).json(err);
+                } else {
+                    candidate['id'] = result.insertId;
+                    res.status(201).json(candidate);
+                }
+            })
+        } else {
+            res.status(400).json({ errorMessage: 'Incorrect or empty password!'});
+        }
+
     };
 };
 
 exports.get_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.candidateId);
-        let sql = `SELECT id, name, address, summary FROM candidates WHERE id = ${id}`;
+        let sql = `SELECT id, name, email, address, summary FROM candidates WHERE id = ${id}`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
@@ -62,25 +73,43 @@ exports.get_by_id = function(db) {
 };
 
 exports.update_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.candidateId);
         let candidate = req.body;
+        var hashedPassword;
+
+        if (candidate['password'] || candidate['password'] == '') {
+            if (candidate['password'].trim()) {
+                hashedPassword = bcrypt.hashSync(candidate['password'].trim(), 8);
+                candidate['password'] = hashedPassword;
+            } else {
+                res.status(400).json({ errorMessage: 'Incorrect or empty password!'});
+                return;
+            }
+        }
         let sql = `UPDATE candidates SET ? WHERE id = ${id}`;
         let query = db.query(sql, candidate, (err, result) => {
             if (err) {
                 res.status(500).json(err);
             } else if (result === undefined || result.length == 0) {
                 res.status(400).json({ errorMessage: 'Incorrect candidateId: ' + id });
+            } else if (result.affectedRows == 0) {
+                res.status(400).json({ errorMessage: 'Incorrect candidateId: ' + id });
             } else {
                 candidate['id'] = Number(id);
+                if (hashedPassword) {
+                    candidate['password'] = hashedPassword; 
+                }
                 res.status(200).json(candidate);
             }
         })
+
+
     };
 };
 
 exports.delete_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.candidateId);
         let sql = `DELETE FROM candidates WHERE id = ${id}`;
         let query = db.query(sql, id, (err, result) => {
@@ -99,7 +128,7 @@ exports.delete_by_id = function(db) {
 };
 
 exports.get_positions_by_candidate_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let candidateId = Number(req.params.candidateId);
         let sql = `SELECT positions.id, positions.title, positions.address, positions.description FROM positions INNER JOIN applications ON applications.positionId = positions.id WHERE applications.candidateId = ${candidateId};`;
         let query = db.query(sql, (err, result) => {
@@ -115,7 +144,7 @@ exports.get_positions_by_candidate_id = function(db) {
 };
 
 exports.create_position_by_candidate_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let application = req.body;
         application['candidateId'] = Number(req.params.candidateId);
         application['date'] = utils.todaysDate();
@@ -132,7 +161,7 @@ exports.create_position_by_candidate_id = function(db) {
 };
 
 exports.get_resume_by_candidate_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let candidateId = Number(req.params.candidateId);
         let sql = `SELECT resume FROM candidates WHERE id = ${candidateId};`;
         let query = db.query(sql, (err, result) => {
@@ -154,7 +183,7 @@ exports.get_resume_by_candidate_id = function(db) {
 };
 
 exports.create_resume_by_candidate_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         var file = JSON.stringify(req.file);
         if (file === undefined || file.length == 0) {
             res.status(400).json({ errorMessage: 'No file found in post request! Make sure its Content-Type: multipart/form-data and name is resume'});
@@ -178,7 +207,7 @@ exports.create_resume_by_candidate_id = function(db) {
 };
 
 exports.delete_resume_by_candidate_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let candidateId = Number(req.params.candidateId);
         let sql = `UPDATE candidates SET resume = NULL WHERE id = ${candidateId}`;
         let query = db.query(sql, (err, result) => {
@@ -196,7 +225,7 @@ exports.delete_resume_by_candidate_id = function(db) {
 };
 
 exports.get_position_by_candidate_id_and_position_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let positionId = Number(req.params.positionId);
         let candidateId = Number(req.params.candidateId);
         let sql = `SELECT positions.id, positions.title, positions.address, positions.description FROM positions INNER JOIN applications ON applications.positionId = positions.id WHERE applications.candidateId = ${candidateId} AND applications.positionId = ${positionId};`;
