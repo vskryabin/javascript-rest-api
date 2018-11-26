@@ -3,8 +3,8 @@
 var utils = require('../../config/utils');
 
 exports.search = function(db) {
-    return function(req, res) {
-        let sql = "SELECT applications.id, candidateId, positionId, name, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id";
+    return function(req, res, next) {
+        let sql = "SELECT applications.id, candidateId, positionId, name, email, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id";
         if (!utils.isEmpty(req.query)) {
             let where = " WHERE ";
             let count = 1;
@@ -37,7 +37,7 @@ exports.search = function(db) {
 };
 
 exports.create = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let application = req.body;
         let sql = 'INSERT INTO applications SET ?';
         let query = db.query(sql, application, (err, result) => {
@@ -52,9 +52,9 @@ exports.create = function(db) {
 };
 
 exports.get_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.applicationId);
-        let sql = `SELECT applications.id, candidateId, positionId, name, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id WHERE applications.id = ${id};`;
+        let sql = `SELECT applications.id, candidateId, positionId, name, email, title, date, summary, description, candidates.address AS candidate_address, positions.address AS position_address FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id INNER JOIN positions ON applications.positionId = positions.id WHERE applications.id = ${id};`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
@@ -68,7 +68,7 @@ exports.get_by_id = function(db) {
 };
 
 exports.delete = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
     	let sql = 'DELETE FROM applications';
     	let query = db.query(sql, (err, result) => {
     		if (err) {
@@ -83,7 +83,7 @@ exports.delete = function(db) {
 };
 
 exports.update_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.applicationId);
         let application = req.body;
         let sql = `UPDATE applications SET ? WHERE id = ${id}`;
@@ -101,7 +101,7 @@ exports.update_by_id = function(db) {
 };
 
 exports.delete_by_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.applicationId);
         let sql = `DELETE FROM applications WHERE id = ${id}`;
         let query = db.query(sql, id, (err, result) => {
@@ -119,7 +119,7 @@ exports.delete_by_id = function(db) {
 };
 
 exports.get_resume_by_application_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.applicationId);
         let sql = `SELECT resume FROM applications INNER JOIN candidates ON applications.candidateId = candidates.id WHERE applications.id = ${id};`;
         let query = db.query(sql, (err, result) => {
@@ -141,7 +141,7 @@ exports.get_resume_by_application_id = function(db) {
 };
 
 exports.create_resume_by_application_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         var file = JSON.stringify(req.file);
         if (file === undefined || file.length == 0) {
             res.status(400).json({ errorMessage: 'No file found in post request! Make sure its Content-Type: multipart/form-data and name is resume'});
@@ -165,7 +165,7 @@ exports.create_resume_by_application_id = function(db) {
 };
 
 exports.delete_resume_by_application_id = function(db) {
-    return function(req, res) {
+    return function(req, res, next) {
         let id = Number(req.params.applicationId);
         let sql = `UPDATE candidates SET resume = NULL WHERE candidates.id = (SELECT candidateId from applications WHERE applications.id = ${id});`;
         let query = db.query(sql, (err, result) => {

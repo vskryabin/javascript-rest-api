@@ -7,6 +7,10 @@
  *         type: integer
  *       name:
  *         type: string
+ *       email:
+ *         type: string
+ *       password:
+ *         type: string
  *       address:
  *         type: string
  *       summary:
@@ -32,6 +36,18 @@
  *           $ref: '#/definitions/candidates'
  *       - name: name
  *         description: name of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: email
+ *         description: email of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: password
+ *         description: password of the candidate
  *         in: query
  *         required: false
  *         schema:
@@ -74,6 +90,18 @@
  *         description: name of the candidate
  *         in: body
  *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: email
+ *         description: email of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: password
+ *         description: password of the candidate
+ *         in: query
+ *         required: false
  *         schema:
  *           $ref: '#/definitions/candidates'
  *       - name: address
@@ -136,6 +164,18 @@
  *         required: true
  *         schema:
  *           $ref: '#/definitions/candidates'
+ *       - name: email
+ *         description: email of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: password
+ *         description: password of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
  *       - name: address
  *         description: address of the candidate
  *         in: body
@@ -173,6 +213,18 @@
  *         description: name of the candidate
  *         in: body
  *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: email
+ *         description: email of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: password
+ *         description: password of the candidate
+ *         in: query
+ *         required: false
  *         schema:
  *           $ref: '#/definitions/candidates'
  *       - name: address
@@ -371,28 +423,29 @@
 var multer = require('multer');
 var storage = multer.memoryStorage()
 var upload = multer({storage: storage});
+var verifyToken = require('../../config/verify_token');
 
 module.exports = function(app, db) {
   var candidates = require('../controllers/candidate_controller');
 
   app.route('/recruit/api/v1/candidates')
     .get(candidates.search(db))
-    .post(candidates.create(db));
+    .post(verifyToken, candidates.create(db));
 
   app.route('/recruit/api/v1/candidates/:candidateId')
     .get(candidates.get_by_id(db))
-    .put(candidates.update_by_id(db))
-    .patch(candidates.update_by_id(db))
-    .delete(candidates.delete_by_id(db));
+    .put(verifyToken, candidates.update_by_id(db))
+    .patch(verifyToken, candidates.update_by_id(db))
+    .delete(verifyToken, candidates.delete_by_id(db));
 
   app.route('/recruit/api/v1/candidates/:candidateId/positions')
     .get(candidates.get_positions_by_candidate_id(db))
-    .post(candidates.create_position_by_candidate_id(db));
+    .post(verifyToken, candidates.create_position_by_candidate_id(db));
 
   app.route('/recruit/api/v1/candidates/:candidateId/resume')
     .get(candidates.get_resume_by_candidate_id(db))
-    .post(upload.single("resume"), candidates.create_resume_by_candidate_id(db))
-    .delete(candidates.delete_resume_by_candidate_id(db));
+    .post(verifyToken, upload.single("resume"), candidates.create_resume_by_candidate_id(db))
+    .delete(verifyToken, candidates.delete_resume_by_candidate_id(db));
 
   app.route('/recruit/api/v1/candidates/:candidateId/positions/:positionId')
     .get(candidates.get_position_by_candidate_id_and_position_id(db));

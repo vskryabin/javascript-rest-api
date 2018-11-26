@@ -5,18 +5,21 @@ DROP TABLE IF EXISTS positions;
 CREATE TABLE candidates (
     id int NOT NULL AUTO_INCREMENT,
     name varchar(255) NOT NULL,
+    email varchar(255) NOT NULL,
+    password varchar(255) NOT NULL,
     address varchar(255),
     summary varchar(255),
     resume MEDIUMBLOB,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE(email)
 );
-INSERT INTO candidates (name, address, summary)
+INSERT INTO candidates (name, email, password, address, summary)
 VALUES 
-('John Doe', '4970 El Camino Real, Los Altos, CA 94022', 'Director, Product Development, 15 years of experience'),
-('Maria  Becker', '3944 Millbrook Road, Naperville, IL 60540', 'Principal Automation Engineer, 8 years of experience'),
-('Frederick  Grant', '1985 Clousson Road, Sergeant Bluff, IA 51054', 'Automation Engineer, 2 years of experience'),
-('Janessa  Houston', '3865 Evergreen Lane, Los Angeles, CA 90031', 'Senior Automation Engineer, 5 years of experience'),
-('Owen  Kelley', '2162 Henery Street, Wichita, KS 67203', 'Principal Automation Engineer, 8 years of experience');
+('John Doe', 'john@example.com', '$2a$08$Lbv.Alq2TxnafjcBgR2cQeoFwhfco.k70tnUPERyhoRN430d93LHq', '4970 El Camino Real, Los Altos, CA 94022', 'Director, Product Development, 15 years of experience'),
+('Maria  Becker', 'maria@example.com', '$2a$08$SpaOMmudfYEPI7tstciC/O8klTO3zdn7FCDFWc2pcch2HLtu0LKHm', '3944 Millbrook Road, Naperville, IL 60540', 'Principal Automation Engineer, 8 years of experience'),
+('Frederick  Grant', 'frederick@example.com', '$2a$08$L2Px/ViCwiiW7kSQEwv.VujOCvmN/Ivnz/cz.9N62zxHx6991Z/gO', '1985 Clousson Road, Sergeant Bluff, IA 51054', 'Automation Engineer, 2 years of experience'),
+('Janessa  Houston', 'janessa@example.com', '$2a$08$qeM7PW7/gK5AgRfuMgPQI.5dqHtBF5lkUzQbp1JxuXUPEb.TSBSdO', '3865 Evergreen Lane, Los Angeles, CA 90031', 'Senior Automation Engineer, 5 years of experience'),
+('Owen  Kelley', 'owen@example.com', '$2a$08$fzLxATVb4Z9fnX0YYyi3mOgwiQCtS86huDBq9NVDFhM3HdgAWyfqO', '2162 Henery Street, Wichita, KS 67203', 'Principal Automation Engineer, 8 years of experience');
 
 CREATE TABLE positions (
     id int NOT NULL AUTO_INCREMENT,
