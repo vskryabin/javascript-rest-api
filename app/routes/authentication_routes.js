@@ -124,7 +124,7 @@ module.exports = function(app, db) {
   var authentication = require('../controllers/authentication_controller');
 
   app.route('/recruit/api/v1/register')
-    .post(authentication.register(db));
+    .post(verifyToken, authentication.register(db));
 
   app.route('/recruit/api/v1/login')
     .post(authentication.login(db));
@@ -134,5 +134,8 @@ module.exports = function(app, db) {
 
   app.route('/recruit/api/v1/logout')
     .post(verifyToken, authentication.logout(db));
+
+  app.route('/recruit/api/v1/tokens')
+    .get(verifyToken, authentication.get_tokens(db));  
 
 };
