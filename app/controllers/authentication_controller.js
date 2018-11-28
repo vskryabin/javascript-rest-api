@@ -92,3 +92,13 @@ exports.logout = function(db) {
         res.status(200).send({ authenticated: false, token: null });
     }
 };
+
+exports.get_tokens = function(db) {
+    return function(req, res, next) {
+        if (!utils.isEmpty(global.jwt_tokens)) {
+            res.status(200).json(global.jwt_tokens);
+        } else {
+            res.status(204).json();
+        }
+    }
+};
