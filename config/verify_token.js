@@ -2,13 +2,16 @@ var jwt = require('jsonwebtoken');
 var config = require('./config');
 
 function verifyToken(req, res, next) {
-  var authorization = req.headers['Authorization'];
+  var authorization = req.headers['authorization'];
   if (!authorization) {
-    return res.status(401).send({ authenticated: false, message: 'No Authorization: Bearer token provided.' });
+    authorization = req.headers['Authorization'];
+  }
+  if (!authorization) {
+    return res.status(401).send({ authenticated: false, message: "No 'Authorization: Bearer {token}' header provided." });
   }
   var bearer = 'Bearer ';
-  if (!authorization.startsWith(bearer) || !authorization.startsWith(bearer.toLowerCase())) {
-    return res.status(401).send({ authenticated: false, message: 'No Authorization: Bearer token provided.' });
+  if (!(authorization.startsWith(bearer) || authorization.startsWith(bearer.toLowerCase()))) {
+    return res.status(401).send({ authenticated: false, message: "Invalid Authorization: Not a 'Authorization: Bearer {token}' header" });
   }
   var token = authorization.substring(bearer.length, authorization.length);
   jwt.verify(token, config.secret, function(err, decoded) {
