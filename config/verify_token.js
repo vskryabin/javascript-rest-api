@@ -2,10 +2,15 @@ var jwt = require('jsonwebtoken');
 var config = require('./config');
 
 function verifyToken(req, res, next) {
-  var token = req.headers['x-access-token'];
-  if (!token) {
-    return res.status(401).send({ authenticated: false, message: 'No x-access-token provided.' });
+  var authorization = req.headers['Authorization'];
+  if (!authorization) {
+    return res.status(401).send({ authenticated: false, message: 'No Authorization: Bearer token provided.' });
   }
+  var bearer = 'Bearer ';
+  if (!authorization.startsWith(bearer) || !authorization.startsWith(bearer.toLowerCase())) {
+    return res.status(401).send({ authenticated: false, message: 'No Authorization: Bearer token provided.' });
+  }
+  var token = authorization.substring(bearer.length, authorization.length);
   jwt.verify(token, config.secret, function(err, decoded) {
     if (err) {
         return res.status(401).send({ authenticated: false, message: 'Invalid token.' });
