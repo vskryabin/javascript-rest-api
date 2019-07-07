@@ -15,6 +15,8 @@ function verifyToken(req, res, next) {
     }
     req.email = decoded.email;
     req.token = token;
+    req.issuedAt = decoded.iat;
+    req.expiresAt = decoded.exp;
     next();
   });
 }

@@ -5,7 +5,11 @@
  *     properties:
  *       id:
  *         type: integer
- *       name:
+ *       firstName:
+ *         type: string
+ *       middleName:
+ *         type: string
+ *       lastName:
  *         type: string
  *       email:
  *         type: string
@@ -13,8 +17,16 @@
  *         type: string
  *       address:
  *         type: string
+ *       city:
+ *         type: string
+ *       state:
+ *         type: string
+ *       zip:
+ *         type: string
  *       summary:
  *         type: string
+ *       positionsCount:
+ *         type: integer
  *   resumes:
  *     properties:
  *       resume:
@@ -34,8 +46,20 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/candidates'
- *       - name: name
- *         description: name of the candidate
+ *       - name: firstName
+ *         description: first name of the candidate
+ *         in: query
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: middleName
+ *         description: middle name of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: lastName
+ *         description: last name of the candidate
  *         in: query
  *         required: false
  *         schema:
@@ -54,6 +78,24 @@
  *           $ref: '#/definitions/candidates'
  *       - name: address
  *         description: address of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: city
+ *         description: city of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: state
+ *         description: state of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: zip
+ *         description: zip of the candidate
  *         in: query
  *         required: false
  *         schema:
@@ -86,8 +128,20 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/candidates'
- *       - name: name
- *         description: name of the candidate
+ *       - name: firstName
+ *         description: first name of the candidate
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: middleName
+ *         description: middle name of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: lastName
+ *         description: last name of the candidate
  *         in: body
  *         required: true
  *         schema:
@@ -106,6 +160,24 @@
  *           $ref: '#/definitions/candidates'
  *       - name: address
  *         description: address of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: city
+ *         description: city of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: state
+ *         description: state of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: zip
+ *         description: zip of the candidate
  *         in: body
  *         required: false
  *         schema:
@@ -152,14 +224,32 @@
  *     description: Updates a single candidate
  *     produces: application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: path
  *         required: true
  *         schema:
  *           $ref: '#/definitions/candidates'
- *       - name: name
- *         description: name of the candidate
+ *       - name: firstName
+ *         description: first name of the candidate
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: middleName
+ *         description: middle name of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: lastName
+ *         description: last name of the candidate
  *         in: body
  *         required: true
  *         schema:
@@ -178,6 +268,24 @@
  *           $ref: '#/definitions/candidates'
  *       - name: address
  *         description: address of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: city
+ *         description: city of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: state
+ *         description: state of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: zip
+ *         description: zip of the candidate
  *         in: body
  *         required: false
  *         schema:
@@ -203,14 +311,32 @@
  *     description: Updates a single candidate
  *     produces: application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: path
  *         required: true
  *         schema:
  *           $ref: '#/definitions/candidates'
- *       - name: name
- *         description: name of the candidate
+ *       - name: firstName
+ *         description: first name of the candidate
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: middleName
+ *         description: middle name of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: lastName
+ *         description: last name of the candidate
  *         in: body
  *         required: true
  *         schema:
@@ -229,6 +355,24 @@
  *           $ref: '#/definitions/candidates'
  *       - name: address
  *         description: address of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: city
+ *         description: city of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: state
+ *         description: state of the candidate
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/candidates'
+ *       - name: zip
+ *         description: zip of the candidate
  *         in: body
  *         required: false
  *         schema:
@@ -255,6 +399,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: path
@@ -297,6 +447,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: path
@@ -346,6 +502,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: path
@@ -374,6 +536,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: path
@@ -430,7 +598,7 @@ module.exports = function(app, db) {
 
   app.route('/recruit/api/v1/candidates')
     .get(candidates.search(db))
-    .post(verifyToken, candidates.create(db));
+    .post(candidates.create(db));
 
   app.route('/recruit/api/v1/candidates/:candidateId')
     .get(candidates.get_by_id(db))

@@ -9,8 +9,21 @@
  *         type: string
  *       address:
  *         type: string
+ *       city:
+ *         type: string
+ *       state:
+ *         type: string
+ *       zip:
+ *         type: string
  *       description:
  *         type: string
+ *       dateOpen:
+ *         type: string
+ *         format: date
+ *       company:
+ *         type: string
+ *       candidatesCount:
+ *         type: integer
  * /positions:
  *   get:
  *     tags:
@@ -37,8 +50,38 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/positions'
+ *       - name: city
+ *         description: city of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: state
+ *         description: state of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: zip
+ *         description: zip of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: dateOpen
+ *         description: date when the position opened
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: description
  *         description: description of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: company
+ *         description: company of the position
  *         in: query
  *         required: false
  *         schema:
@@ -59,6 +102,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of position
  *         in: body
@@ -77,8 +126,38 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/positions'
+ *       - name: city
+ *         description: city of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: state
+ *         description: state of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: zip
+ *         description: zip of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: dateOpen
+ *         description: date when the position opened
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: description
  *         description: description of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: company
+ *         description: company of the position
  *         in: body
  *         required: false
  *         schema:
@@ -119,6 +198,12 @@
  *     description: Updates a single position
  *     produces: application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of position
  *         in: path
@@ -137,8 +222,38 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/positions'
+ *       - name: city
+ *         description: city of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: state
+ *         description: state of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: zip
+ *         description: zip of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: dateOpen
+ *         description: date when the position opened
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: description
  *         description: description of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: company
+ *         description: company of the position
  *         in: body
  *         required: false
  *         schema:
@@ -158,6 +273,12 @@
  *     description: Updates a single position
  *     produces: application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of position
  *         in: path
@@ -176,8 +297,38 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/positions'
+ *       - name: city
+ *         description: city of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: state
+ *         description: state of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: zip
+ *         description: zip of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: dateOpen
+ *         description: date when the position opened
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
  *       - name: description
  *         description: description of the position
+ *         in: body
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/positions'
+ *       - name: company
+ *         description: company of the position
  *         in: body
  *         required: false
  *         schema:
@@ -198,6 +349,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of position
  *         in: path
@@ -241,6 +398,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of position
  *         in: path

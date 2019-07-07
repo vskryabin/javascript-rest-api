@@ -9,20 +9,43 @@
  *         type: integer
  *       positionId:
  *         type: integer
- *       name:
+ *       firstName:
  *         type: string
- *       title:
+ *       middleName:
  *         type: string
- *       date:
+ *       lastName:
+ *         type: string
+ *       email:
+ *         type: string
+ *       dateApplied:
  *         type: string
  *         format: date
+ *       title:
+ *         type: string
  *       summary:
  *         type: string
  *       description:
  *         type: string
+ *       dateOpen:
+ *         type: string
+ *         format: date
+ *       company:
+ *         type: string
  *       candidate_address:
  *         type: string
+ *       candidate_city:
+ *         type: string
+ *       candidate_state:
+ *         type: string
+ *       candidate_zip:
+ *         type: string
  *       position_address:
+ *         type: string
+ *       position_city:
+ *         type: string
+ *       position_state:
+ *         type: string
+ *       position_zip:
  *         type: string
  * /applications:
  *   get:
@@ -50,20 +73,32 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/applications'
- *       - name: name
- *         description: name of the candidate
+ *       - name: firstName
+ *         description: first name of the candidate
  *         in: query
  *         required: false
  *         schema:
  *           $ref: '#/definitions/applications'
- *       - name: summary
- *         description: summary of the candidate
+ *       - name: middleName
+ *         description: middle name of the candidate
  *         in: query
  *         required: false
  *         schema:
  *           $ref: '#/definitions/applications'
- *       - name: candidate_address
- *         description: address of the candidate
+ *       - name: lastName
+ *         description: last name of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: email
+ *         description: email of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: dateApplied
+ *         description: date when the candidate applied
  *         in: query
  *         required: false
  *         schema:
@@ -74,14 +109,74 @@
  *         required: false
  *         schema:
  *           $ref: '#/definitions/applications'
+ *       - name: summary
+ *         description: summary of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *       - name: description
  *         description: description of the position
  *         in: query
  *         required: false
  *         schema:
  *           $ref: '#/definitions/applications'
+ *       - name: dateOpen
+ *         description: date when the position opened
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: company
+ *         description: company of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: candidate_address
+ *         description: address of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: candidate_city
+ *         description: city of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: candidate_state
+ *         description: state of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: candidate_zip
+ *         description: zip of the candidate
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
  *       - name: position_address
  *         description: address of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: position_city
+ *         description: city of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: position_state
+ *         description: state of the position
+ *         in: query
+ *         required: false
+ *         schema:
+ *           $ref: '#/definitions/applications'
+ *       - name: position_zip
+ *         description: zip of the position
  *         in: query
  *         required: false
  *         schema:
@@ -102,6 +197,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of application
  *         in: body
@@ -156,6 +257,12 @@
  *     description: Updates a single application
  *     produces: application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of application
  *         in: path
@@ -189,6 +296,12 @@
  *     description: Updates a single application
  *     produces: application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of application
  *         in: path
@@ -223,6 +336,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of application
  *         in: path
@@ -266,6 +385,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of application
  *         in: path
@@ -294,6 +419,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of application
  *         in: path
@@ -321,8 +452,8 @@ module.exports = function(app, db) {
 
   app.route('/recruit/api/v1/applications')
     .get(applications.search(db))
-    .post(verifyToken, applications.create(db));
-    // .delete(applications.delete(db));
+    .post(verifyToken, applications.create(db))
+    .delete(applications.delete(db));
 
   app.route('/recruit/api/v1/applications/:applicationId')
     .get(applications.get_by_id(db))
