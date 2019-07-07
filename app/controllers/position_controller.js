@@ -4,7 +4,7 @@ var utils = require('../../config/utils');
 
 exports.search = function(db) {
     return function(req, res, next) {
-    	let sql = "SELECT *, (SELECT COUNT(*) FROM applications WHERE applications.positionId = positions.id) AS candidatesCount FROM positions";
+    	let sql = "SELECT id, title, address, city, state, zip, description, DATE_FORMAT(dateOpen, '%Y-%m-%d') AS dateOpen, company, (SELECT COUNT(*) FROM applications WHERE applications.positionId = positions.id) AS candidatesCount FROM positions";
         if (!utils.isEmpty(req.query)) {
             let where = " WHERE ";
             let count = 1;
@@ -48,7 +48,7 @@ exports.create = function(db) {
 exports.get_by_id = function(db) {
     return function(req, res, next) {
     	let id = Number(req.params.positionId);
-    	let sql = `SELECT *, (SELECT COUNT(*) FROM applications WHERE applications.positionId = positions.id) AS candidatesCount FROM positions WHERE id = ${id}`;
+    	let sql = `SELECT id, title, address, city, state, zip, description, DATE_FORMAT(dateOpen, '%Y-%m-%d') AS dateOpen, company, (SELECT COUNT(*) FROM applications WHERE applications.positionId = positions.id) AS candidatesCount FROM positions WHERE id = ${id}`;
     	let query = db.query(sql, (err, result) => {
     		if (err) {
                 res.status(500).json(err);
