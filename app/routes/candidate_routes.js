@@ -122,12 +122,6 @@
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         description: generated during login bearer token
- *         in: header
- *         required: true
- *         schema:
- *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: body
@@ -231,7 +225,7 @@
  *     produces: application/json
  *     parameters:
  *       - name: Authorization
- *         description: generated during login bearer token
+ *         description: Authorization Bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -318,7 +312,7 @@
  *     produces: application/json
  *     parameters:
  *       - name: Authorization
- *         description: generated during login bearer token
+ *         description: Authorization Bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -406,7 +400,7 @@
  *       - application/json
  *     parameters:
  *       - name: Authorization
- *         description: generated during login bearer token
+ *         description: Authorization Bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -454,7 +448,7 @@
  *       - application/json
  *     parameters:
  *       - name: Authorization
- *         description: generated during login bearer token
+ *         description: Authorization Bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -509,7 +503,7 @@
  *       - application/json
  *     parameters:
  *       - name: Authorization
- *         description: generated during login bearer token
+ *         description: Authorization Bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -543,7 +537,7 @@
  *       - application/json
  *     parameters:
  *       - name: Authorization
- *         description: generated during login bearer token
+ *         description: Authorization Bearer token
  *         in: header
  *         required: true
  *         schema:
