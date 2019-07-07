@@ -122,6 +122,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: id
  *         description: primary key of candidate
  *         in: body
