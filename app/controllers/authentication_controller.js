@@ -38,7 +38,7 @@ exports.login = function(db) {
     return function(req, res, next) {
         var email = req.body.email;
         var password = req.body.password;
-        let sql = `SELECT id, name, address, summary, password FROM candidates WHERE email = "${email}"`;
+        let sql = `SELECT id, email, firstName, middleName, lastName, address, city, state, zip, summary, role, password FROM candidates WHERE email = "${email}"`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
@@ -61,7 +61,7 @@ exports.login = function(db) {
                     }
                 }
                 global.jwt_tokens[token] = {valid: true, iat: currentTime, exp: currentTime + expiresInSeconds};
-                res.status(200).send({ authenticated: true, token: token });
+                res.status(200).send({ authenticated: true, token: token, issuedAt: currentTime, expiresAt: currentTime + expiresInSeconds });
             }
         })
     }
@@ -69,16 +69,24 @@ exports.login = function(db) {
 
 exports.verify = function(db) {
     return function(req, res, next) {
+        let token = req.token;
+        let expiresAt = req.expiresAt;
+        let issuedAt = req.issuedAt;
+        // let decodedToken = jwt.decode(token, {complete: true});
         let email = req.email;
-        let sql = `SELECT id, name, address, summary FROM candidates WHERE email = "${email}"`;
+        let sql = `SELECT id, email, firstName, middleName, lastName, address, city, state, zip, summary, role FROM candidates WHERE email = "${email}"`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
             } else if (result === undefined || result.length == 0) {
                 res.status(400).json({ errorMessage: 'Incorrect email: ' + email });
             } else {
-                // res.status(200).send(decoded);
-                res.status(200).json(result[0]);
+                // res.status(200).send(decodedToken);
+                let verifiedResult = result[0];
+                verifiedResult['token'] = token;
+                verifiedResult['expiresAt'] = expiresAt;
+                verifiedResult['issuedAt'] = issuedAt;
+                res.status(200).json(verifiedResult);
             }
         })
     }

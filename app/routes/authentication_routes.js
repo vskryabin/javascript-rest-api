@@ -9,6 +9,10 @@
  *         type: boolean
  *       token:
  *         type: string
+ *       issuedAt:
+ *         type: string
+ *       expiresAt:
+ *         type: string
  * /register:
  *   post:
  *     tags:
@@ -17,6 +21,12 @@
  *     produces:
  *       - application/json
  *     parameters:
+ *       - name: Authorization
+ *         description: generated during login bearer token
+ *         in: header
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/authentication'
  *       - name: email
  *         description: email of the candidate
  *         in: body
@@ -68,15 +78,15 @@
  *       500:
  *         description: Application error
  * /verify:
- *   get:
+ *   post:
  *     tags:
  *       - authentication
  *     description: Verifies the token and returns instance of logged in candidate
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: x-access-token
- *         description: generated during login token
+ *       - name: Authorization
+ *         description: generated during login bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -100,8 +110,8 @@
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: x-access-token
- *         description: generated during login token
+ *       - name: Authorization
+ *         description: generated during login bearer token
  *         in: header
  *         required: true
  *         schema:
@@ -130,7 +140,7 @@ module.exports = function(app, db) {
     .post(authentication.login(db));
 
   app.route('/recruit/api/v1/verify')
-    .get(verifyToken, authentication.verify(db));  
+    .post(verifyToken, authentication.verify(db));  
 
   app.route('/recruit/api/v1/logout')
     .post(verifyToken, authentication.logout(db));

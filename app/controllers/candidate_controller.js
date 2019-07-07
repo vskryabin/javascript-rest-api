@@ -8,7 +8,7 @@ var bcrypt = require('bcryptjs');
 
 exports.search = function(db) {
     return function(req, res, next) {
-        let sql = "SELECT id, name, email, address, summary FROM candidates";
+        let sql = "SELECT id, email, firstName, middleName, lastName, address, city, state, zip, summary, (SELECT COUNT(*) FROM applications WHERE applications.candidateId = candidates.id) AS positionsCount FROM candidates";
         if (!utils.isEmpty(req.query)) {
             let where = " WHERE ";
             let count = 1;
@@ -59,7 +59,7 @@ exports.create = function(db) {
 exports.get_by_id = function(db) {
     return function(req, res, next) {
         let id = Number(req.params.candidateId);
-        let sql = `SELECT id, name, email, address, summary FROM candidates WHERE id = ${id}`;
+        let sql = `SELECT id, email, firstName, middleName, lastName, address, city, state, zip, summary, (SELECT COUNT(*) FROM applications WHERE applications.candidateId = candidates.id) AS candidatesCount FROM candidates WHERE id = ${id}`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
@@ -130,7 +130,7 @@ exports.delete_by_id = function(db) {
 exports.get_positions_by_candidate_id = function(db) {
     return function(req, res, next) {
         let candidateId = Number(req.params.candidateId);
-        let sql = `SELECT positions.id, positions.title, positions.address, positions.description FROM positions INNER JOIN applications ON applications.positionId = positions.id WHERE applications.candidateId = ${candidateId};`;
+        let sql = `SELECT positions.id, positions.title, positions.address, positions.city, positions.state, positions.zip, positions.description, positions.dateOpen, positions.company, (SELECT COUNT(*) FROM applications WHERE applications.positionId = positions.id) AS candidatesCount FROM positions INNER JOIN applications ON applications.positionId = positions.id WHERE applications.candidateId = ${candidateId};`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);
@@ -228,7 +228,7 @@ exports.get_position_by_candidate_id_and_position_id = function(db) {
     return function(req, res, next) {
         let positionId = Number(req.params.positionId);
         let candidateId = Number(req.params.candidateId);
-        let sql = `SELECT positions.id, positions.title, positions.address, positions.description FROM positions INNER JOIN applications ON applications.positionId = positions.id WHERE applications.candidateId = ${candidateId} AND applications.positionId = ${positionId};`;
+        let sql = `SELECT positions.id, positions.title, positions.address, positions.city, positions.state, positions.zip, positions.description, positions.dateOpen, positions.company, (SELECT COUNT(*) FROM applications WHERE applications.positionId = positions.id) AS candidatesCount FROM positions INNER JOIN applications ON applications.positionId = positions.id WHERE applications.candidateId = ${candidateId} AND applications.positionId = ${positionId};`;
         let query = db.query(sql, (err, result) => {
             if (err) {
                 res.status(500).json(err);

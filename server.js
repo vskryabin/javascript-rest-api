@@ -4,6 +4,8 @@ const express         = require('express');
 const path            = require('path');
 const bodyParser      = require('body-parser');
 const cors            = require('cors');
+const helmet          = require('helmet');
+const morgan          = require('morgan');
 const app             = express();
 const port            = process.env.PORT || 80;
 const mysql           = require('mysql');
@@ -24,7 +26,10 @@ db.connect((err) => {
 global.jwt_tokens = {};
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(helmet());
 app.use(cors());
+app.use(morgan('combined'));
+
 // app.use(function (req, res, next) {
 //   res.setHeader('Access-Control-Allow-Origin', '*');
 //   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, PUT, PATCH, DELETE');
