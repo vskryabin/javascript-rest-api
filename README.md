@@ -1,6 +1,6 @@
-# recruit-rest-api
+# javascript-rest-api
 
-Recruit REST API
+JavaScript REST API
 
 To run:
 
